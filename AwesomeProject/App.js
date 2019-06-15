@@ -6,6 +6,21 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import AppNavigator from './navigation/AppNavigator';
+import * as firebase from 'firebase';
+
+
+var firebaseConfig = {
+  apiKey: "AIzaSyDMfKWt5bMhtG8yvl-YiAf5zvZq9w9pB6Y",
+  authDomain: "okonomieats.firebaseapp.com",
+  databaseURL: "https://okonomieats.firebaseio.com",
+  projectId: "okonomieats",
+  storageBucket: "okonomieats.appspot.com",
+  messagingSenderId: "750658022651",
+  appId: "1:750658022651:web:13496985fe792ae0"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);

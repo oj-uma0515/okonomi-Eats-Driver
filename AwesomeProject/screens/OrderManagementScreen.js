@@ -1,5 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
+import { List, SwipeAction } from '@ant-design/react-native';
+
 import {
   Image,
   Platform,
@@ -8,89 +10,102 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from 'react-native';
+
 import { MonoText } from '../components/StyledText';
 
 import { ListItem,FlatList} from 'react-native-elements';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import { getSupportedVideoFormats } from 'expo/build/AR';
 
-export default class HomeScreen extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = { list:[],animating: true};
-    
-  }
-
-  componentWillMount(){
-    let orderData = [];
-    firebase.firestore().collection("orders")
-       .get()
-       .then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-              // doc.data() is never undefined for query doc snapshots
-              console.log(doc.data());
-              orderData.push({
-                'shopAdress': doc.data().shopAdress,
-                'userId': doc.data().userId,
-              })
-              console.log(orderData);
-           });
-       })
-       .catch(function(error) {
-       console.log("Error getting documents: ", error);
-   });
-
-   setTimeout(() => {
-      this.setState({animating:false}); 
-      this.setState({list:orderData});
-   }, 2000)
-  };
-  
-  setList(orderData){
-    this.setState({list:orderData});
-  };
-
+export default class OrderManagementScreen extends React.Component {
   render() 
+  
   {
-    const list = this.state.list;
-    const animating = this.state.animating;
+    const orderSwipe = [
+      {
+        text: 'done',
+        onPress: () => console.log('order'),
+        style: { backgroundColor: 'orange', color: 'white' },
+      },
+    ];
+    const receiveSwipe = [
+      {
+        text: 'done',
+        onPress: () => console.log('receive'),
+        style: { backgroundColor: 'orange', color: 'white' },
+      },
+    ];
+    const arrivalSwipe = [
+      {
+        text: 'done',
+        onPress: () => console.log('arrival'),
+        style: { backgroundColor: 'orange', color: 'white' },
+      },
+    ];
+    const passSwipe = [
+      {
+        text: 'done',
+        onPress: () => console.log('pass'),
+        style: { backgroundColor: 'orange', color: 'white' },
+      },
+    ];
+
+    const orderDetail = 
+    {
+      shop_address:'1000円',
+      shop_name:'1枚',
+    }
+
     return (
-      <View style={styles.container}>
-            <ScrollView
-              style={styles.container}
-              contentContainerStyle={styles.contentContainer}>
-          <View>
-          {
-          list.map((l, i) => (
-              <ListItem
-              onPress={() => {this.props.navigation.navigate('OrderDetail')}}
-                key={i}
-                // leftAvatar={{ source: { uri: l.avatar_url } }}
-                title={l.shopAdress}
-                subtitle={l.userId}
-            />
-            ))
-          }
-          </View>
-          <View>
-        <ActivityIndicator
-           animating = {animating}
-           color = '#0000aa'
-           size = "large"
-           style = {styles.activityIndicator}/>
+      <View style={{ paddingTop: 30 }}>
+        
       </View>
-          </ScrollView>
-          </View>
+
+      <View style={{ paddingTop: 30 }}>
+      <List>
+        <SwipeAction
+          autoClose
+          style={{ backgroundColor: 'transparent' }}
+          right={orderSwipe}
+        >
+          <List.Item extra="extra content">
+            注文した
+          </List.Item>
+        </SwipeAction>
+        <SwipeAction
+          autoClose
+          style={{ backgroundColor: 'transparent' }}
+          right={receiveSwipe}
+        >
+          <List.Item extra="extra content">
+            受け取った
+          </List.Item>
+        </SwipeAction>
+        <SwipeAction
+          autoClose
+          style={{ backgroundColor: 'transparent' }}
+          right={arrivalSwipe}
+        >
+          <List.Item extra="extra content">
+            到着した
+          </List.Item>
+        </SwipeAction>
+        <SwipeAction
+          autoClose
+          style={{ backgroundColor: 'transparent' }}
+          right={passSwipe}
+        >
+          <List.Item extra="extra content">
+            渡した
+          </List.Item>
+        </SwipeAction>
+      </List>
+    </View>
         );
   }
   
 }
 
-HomeScreen.navigationOptions = {
+OrderManagementScreen.navigationOptions = {
   header: null,
 };
 

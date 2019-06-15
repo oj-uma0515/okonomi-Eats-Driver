@@ -8,89 +8,92 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from 'react-native';
+import { Button,Tile} from 'react-native-elements';
+
 import { MonoText } from '../components/StyledText';
 
-import { ListItem,FlatList} from 'react-native-elements';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import { getSupportedVideoFormats } from 'expo/build/AR';
+import { ListItem,FlatList } from 'react-native-elements';
 
-export default class HomeScreen extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { list:[],animating: true};
+const orderDetail = 
+    {
+      payment:'1000円',
+      sheet:'1枚',
+      username:"お好み",
+      address:"広島県広島市"
+    }
+
+export default class OrderDetailScreen extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = props;
+        console.log(this.state);
+
+        // this.state = { list:[],animating: true};
+        // const {} = this.props;
+        //  this.state
+      }
+      componentWillMount(){
+        let orderData = [];
+    //     firebase.firestore().collection("orders").where("userId","==",this.state.userId)
+    //        .get()
+    //        .then(function(querySnapshot) {
+    //           querySnapshot.forEach(function(doc) {
+    //               // doc.data() is never undefined for query doc snapshots
+    //               console.log(doc.data());
+    //               orderData.push({
+    //                 'shopAdress': doc.data().shopAdress,
+    //                 'userId': doc.data().userId,
+    //               })
+    //               console.log(orderData);
+    //            });
+    //        })
+    //        .catch(function(error) {
+    //        console.log("Error getting documents: ", error);
+    //    });
     
-  }
+    //    setTimeout(() => {
+    //       this.setState({animating:false}); 
+    //       this.setState({list:orderData});
+    //    }, 2000)
+      };
 
-  componentWillMount(){
-    let orderData = [];
-    firebase.firestore().collection("orders")
-       .get()
-       .then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-              // doc.data() is never undefined for query doc snapshots
-              console.log(doc.data());
-              orderData.push({
-                'shopAdress': doc.data().shopAdress,
-                'userId': doc.data().userId,
-              })
-              console.log(orderData);
-           });
-       })
-       .catch(function(error) {
-       console.log("Error getting documents: ", error);
-   });
+  render(){
+  return (
 
-   setTimeout(() => {
-      this.setState({animating:false}); 
-      this.setState({list:orderData});
-   }, 2000)
-  };
-  
-  setList(orderData){
-    this.setState({list:orderData});
-  };
+<View style={styles.container}>
 
-  render() 
-  {
-    const list = this.state.list;
-    const animating = this.state.animating;
-    return (
-      <View style={styles.container}>
-            <ScrollView
-              style={styles.container}
-              contentContainerStyle={styles.contentContainer}>
-          <View>
-          {
-          list.map((l, i) => (
-              <ListItem
-              onPress={() => {this.props.navigation.navigate('OrderDetail')}}
-                key={i}
-                // leftAvatar={{ source: { uri: l.avatar_url } }}
-                title={l.shopAdress}
-                subtitle={l.userId}
-            />
-            ))
-          }
-          </View>
-          <View>
-        <ActivityIndicator
-           animating = {animating}
-           color = '#0000aa'
-           size = "large"
-           style = {styles.activityIndicator}/>
-      </View>
-          </ScrollView>
-          </View>
-        );
-  }
-  
+
+<ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
+        
+            <View>
+                <Text h2>総額：{orderDetail.payment}</Text>
+            </View>
+            <View>
+                <Text h2>枚数：{orderDetail.sheet}</Text>
+            </View>
+            <View>
+                <Text h2>名前：{orderDetail.username}</Text>
+            </View>
+            <View>
+                <Text h2>住所：{orderDetail.address}</Text>
+            </View>
+    </ScrollView>
+    <Button
+        title="受ける"
+        type="solid"
+        color="blue"
+        onPress={() => {this.props.navigation.navigate('OrderManagement')}}
+    />
+</View>
+  );
+}
 }
 
-HomeScreen.navigationOptions = {
+OrderDetailScreen.navigationOptions = {
   header: null,
 };
 
