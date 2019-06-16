@@ -72,7 +72,10 @@ export default class HomeScreen extends React.Component {
               console.log(doc.data());
               orderData.push({
                 'documentId':doc.id,
+                'totalPrice':doc.data().totalPrice,
+                'shopName': doc.data().shopName,
                 'shopAdress': doc.data().shopAdress,
+                'userName': doc.data().userName,
                 'userId': doc.data().userId,
               })
               console.log(orderData);
@@ -108,8 +111,9 @@ export default class HomeScreen extends React.Component {
               onPress={() => {this.props.navigation.navigate('OrderDetail',{orderDetail:{documentId:l.documentId,shopAdress:l.shopAdress,userId:l.userId}})}}
                 key={i}
                 // leftAvatar={{ source: { uri: l.avatar_url } }}
-                title={l.shopAdress}
-                subtitle={l.userId}
+                title={l.shopName}
+                rightSubtitle={'¥'+l.totalPrice}
+                subtitle={l.shopAdress}
             />
             ))
           }

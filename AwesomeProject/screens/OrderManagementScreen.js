@@ -92,8 +92,8 @@ export default class OrderManagementScreen extends React.Component {
 
     return (
       <View style={{ paddingTop: 30 }}>
-                    <View>
-            <ListItem
+            <View>
+            <ListItem style={borderRadius}
                 // leftAvatar={{ source: { uri: l.avatar_url } }}
                 title="店舗情報"
             />
