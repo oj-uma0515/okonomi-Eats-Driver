@@ -85,7 +85,7 @@ export default class OrderDetailScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
             <View>
-            <ListItem
+            <ListItem style = {styles.listItem}
                 // leftAvatar={{ source: { uri: l.avatar_url } }}
                 title="店舗情報"
             />
@@ -100,10 +100,10 @@ export default class OrderDetailScreen extends React.Component {
                 <Text h2>メニュー名：{orderDetail.menuName}</Text>
             </View>
             <View>
-                <Text h2>配送料：{orderDetail.deliveryFee}</Text>
+                <Text h2>配送料：{orderDetail.deliveryFee} 円</Text>
             </View>
             <View>
-                <Text h2>総額：{orderDetail.totalPrice}</Text>
+                <Text h2>総額：{orderDetail.totalPrice} 円</Text>
             </View>
             <View>
             <ListItem
@@ -262,4 +262,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2e78b7',
   },
+  listItem:{
+    borderRadius:20,
+    color: '#fbfbfb',
+  }
 });
