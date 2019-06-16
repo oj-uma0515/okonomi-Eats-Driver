@@ -39,13 +39,11 @@ export default class OrderManagementScreen extends React.Component {
         orderDetail:this.props.navigation.state.params.orderDetail.orderDetail,
         orderDocumentId:this.props.navigation.state.params.orderDetail.ordersDocumentId,
         animating: false};
-      console.log(this.state.orderDocumentId);
       }
   componentWillMount(){
   };
     
   updateStatus(status){
-    console.log(this);
     firebase.firestore().collection("orders").doc(this.state.orderDocumentId).update({
       status: status,
       });
