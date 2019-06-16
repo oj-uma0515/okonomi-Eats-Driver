@@ -68,8 +68,6 @@ export default class HomeScreen extends React.Component {
        .get()
        .then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
-              // doc.data() is never undefined for query doc snapshots
-              console.log(doc.data());
               orderData.push({
                 'documentId':doc.id,
                 'totalPrice':doc.data().totalPrice,
@@ -78,7 +76,6 @@ export default class HomeScreen extends React.Component {
                 'userName': doc.data().userName,
                 'userId': doc.data().userId,
               })
-              console.log(orderData);
            });
        })
        .catch(function(error) {
