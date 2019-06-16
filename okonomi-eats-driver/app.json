@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "okonomieatsdriver",
-    "slug": "AwesomeProject",
+    "name": "OkonomiEatsDriver",
+    "slug": "OkonomiEatsDriver",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
@@ -11,9 +11,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/okonomiDriver.png",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/okonomiDriver.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -25,6 +25,9 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "OkonomiEatsDriver"
     }
   }
 }
