@@ -20,7 +20,6 @@ const headerNavigationOptions = {
 };
 
 const HomeStack = createStackNavigator({
-  Tab: { screen: TabNavigatorComponent }, 
   home:{
     screen: HomeScreen,
     navigationOptions: {

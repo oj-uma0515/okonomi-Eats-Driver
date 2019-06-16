@@ -110,8 +110,8 @@ export default class HomeScreen extends React.Component {
                 // leftAvatar={{ source: { uri: l.avatar_url } }}
                 title={l.shopName}
                 rightSubtitle={'¥'+l.totalPrice}
-                subtitle={l.shopAdress}
-            />
+                subtitle={l.shopAdress}>
+            </ListItem>
             ))
           }
           </View>
