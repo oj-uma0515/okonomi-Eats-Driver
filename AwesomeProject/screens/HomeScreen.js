@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   ActivityIndicator,
 } from 'react-native';
@@ -15,7 +14,8 @@ import { MonoText } from '../components/StyledText';
 import { ListItem,FlatList} from 'react-native-elements';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import { getSupportedVideoFormats } from 'expo/build/AR';
+import { Permissions, Notifications } from 'expo';
+
 
 export default class HomeScreen extends React.Component {
 
@@ -26,6 +26,43 @@ export default class HomeScreen extends React.Component {
   }
 
   componentWillMount(){
+    async function registerForPushNotificationsAsync() {
+      const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.NOTIFICATIONS
+      );
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        return;
+      }
+      let token = await Notifications.getExpoPushTokenAsync();
+      saveDeviceToken(token);
+    }
+
+    const saveDeviceToken = async (token) => {
+      try {
+        const db = firebase.firestore();
+        const matchResults = token.match(/ExponentPushToken\[(.*)\]/);
+        const actualToken = matchResults[1];
+        if (!actualToken) return;
+        const user = await firebase.auth().currentUser;
+        const userRef = db.collection('drivers').doc('ZE4C1rh8qEUKrsCIz5wz');
+        const userDoc = await userRef.get();
+        const userInfo = userDoc.data();
+        const currentTokens = userInfo.tokens || [];
+        if(!currentTokens[actualToken]) {
+          currentTokens[actualToken] = true;
+          await userRef.update({ tokens: { ...currentTokens }});
+        }
+      } catch (err) {
+        console.error(`device token save error: ${err}`);
+      }
+    };
+    registerForPushNotificationsAsync();
+
     let orderData = [];
     firebase.firestore().collection("orders")
        .get()
@@ -34,6 +71,7 @@ export default class HomeScreen extends React.Component {
               // doc.data() is never undefined for query doc snapshots
               console.log(doc.data());
               orderData.push({
+                'documentId':doc.id,
                 'shopAdress': doc.data().shopAdress,
                 'userId': doc.data().userId,
               })
@@ -67,7 +105,7 @@ export default class HomeScreen extends React.Component {
           {
           list.map((l, i) => (
               <ListItem
-              onPress={() => {this.props.navigation.navigate('OrderDetail')}}
+              onPress={() => {this.props.navigation.navigate('OrderDetail',{orderDetail:{documentId:l.documentId,shopAdress:l.shopAdress,userId:l.userId}})}}
                 key={i}
                 // leftAvatar={{ source: { uri: l.avatar_url } }}
                 title={l.shopAdress}

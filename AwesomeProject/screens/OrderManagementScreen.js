@@ -10,57 +10,128 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
 
 import { ListItem,FlatList} from 'react-native-elements';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import { isRearCameraAvailable } from 'expo/build/AR';
+
+const _STATUS_START　= 0;
+const _STATUS_ORDER　= 1;
+const _STATUS_RECEIVE　= 2;
+const _STATUS_ARRIVAL　= 3;
+const _STATUS_DONE　= 4;
+
+// exports.updateUser = functions.firestore
+//   .document('orders/' + this.state.orderDocumentId)
+//   .onUpdate(() => {
+
+// });
 
 export default class OrderManagementScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        orderDetail:this.props.navigation.state.params.orderDetail.orderDetail,
+        orderDocumentId:this.props.navigation.state.params.orderDetail.ordersDocumentId,
+        animating: false};
+      console.log(this.state.orderDocumentId);
+      }
+  componentWillMount(){
+  };
+    
+  updateStatus(status){
+    console.log(this);
+    firebase.firestore().collection("orders").doc(this.state.orderDocumentId).update({
+      status: status,
+      });
+      this.setState({animating:true});  
+    setTimeout(() => {
+      this.setState({animating:false}); 
+      if(status == _STATUS_DONE) this.props.navigation.navigate('home');
+    }, 1000);
+}
+
   render() 
-  
   {
+    const animating = this.state.animating;
+    const orderDetail = this.state.orderDetail;
+
     const orderSwipe = [
       {
         text: 'done',
-        onPress: () => console.log('order'),
+        onPress: () => this.updateStatus(_STATUS_ORDER),
         style: { backgroundColor: 'orange', color: 'white' },
       },
     ];
     const receiveSwipe = [
       {
         text: 'done',
-        onPress: () => console.log('receive'),
+        onPress: () => this.updateStatus(_STATUS_RECEIVE),
         style: { backgroundColor: 'orange', color: 'white' },
       },
     ];
     const arrivalSwipe = [
       {
         text: 'done',
-        onPress: () => console.log('arrival'),
+        onPress: () => this.updateStatus(_STATUS_ARRIVAL),
         style: { backgroundColor: 'orange', color: 'white' },
       },
     ];
     const passSwipe = [
       {
         text: 'done',
-        onPress: () => console.log('pass'),
+        onPress: () => this.updateStatus(_STATUS_DONE),
         style: { backgroundColor: 'orange', color: 'white' },
       },
     ];
 
-    const orderDetail = 
-    {
-      shop_address:'1000円',
-      shop_name:'1枚',
-    }
-
     return (
       <View style={{ paddingTop: 30 }}>
-        
-      </View>
-
-      <View style={{ paddingTop: 30 }}>
+                    <View>
+            <ListItem
+                // leftAvatar={{ source: { uri: l.avatar_url } }}
+                title="店舗情報"
+            />
+            </View>
+            <View>
+                <Text h2>店舗名：{orderDetail.shopName}</Text>
+            </View>
+            <View>
+                <Text h2>店舗住所：{orderDetail.shopAddress}</Text>
+            </View>
+            <View>
+                <Text h2>メニュー名：{orderDetail.menuName}</Text>
+            </View>
+            <View>
+                <Text h2>配送料：{orderDetail.deliveryFee}</Text>
+            </View>
+            <View>
+                <Text h2>総額：{orderDetail.totalPrice}</Text>
+            </View>
+            <View>
+            <ListItem
+                // leftAvatar={{ source: { uri: l.avatar_url } }}
+                title="お届け先情報"
+            />
+            </View>
+            <View>
+                <Text h2>お名前：{orderDetail.userName}</Text>
+            </View>
+            <View>
+                <Text h2>ご住所：{orderDetail.userAddress}</Text>
+            </View>
+            <View>
+        <ActivityIndicator
+          animating = {animating}
+          color = '#0000aa'
+          size = "large"
+          style = {styles.activityIndicator}/>
+        </View>
       <List>
         <SwipeAction
           autoClose

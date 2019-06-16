@@ -1,0 +1,4 @@
+.fade-exit {
+    transition: opacity 800ms ease-in;
+    opacity: 1;
+}

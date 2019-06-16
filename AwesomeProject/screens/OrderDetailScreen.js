@@ -8,59 +8,75 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import { Button,Tile} from 'react-native-elements';
 
 import { MonoText } from '../components/StyledText';
 
 import { ListItem,FlatList } from 'react-native-elements';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 
-
-const orderDetail = 
-    {
-      payment:'1000円',
-      sheet:'1枚',
-      username:"お好み",
-      address:"広島県広島市"
-    }
+const _STATUS_START = 0;
 
 export default class OrderDetailScreen extends React.Component {
     constructor(props) {
         super(props);
-        this.state = props;
-        console.log(this.state);
-
-        // this.state = { list:[],animating: true};
-        // const {} = this.props;
-        //  this.state
+        this.state = {
+            orderDetailProps:this.props.navigation.state.params.orderDetail,
+            orderDetail:[],
+            animating: true};
       }
       componentWillMount(){
-        let orderData = [];
-    //     firebase.firestore().collection("orders").where("userId","==",this.state.userId)
-    //        .get()
-    //        .then(function(querySnapshot) {
-    //           querySnapshot.forEach(function(doc) {
-    //               // doc.data() is never undefined for query doc snapshots
-    //               console.log(doc.data());
-    //               orderData.push({
-    //                 'shopAdress': doc.data().shopAdress,
-    //                 'userId': doc.data().userId,
-    //               })
-    //               console.log(orderData);
-    //            });
-    //        })
-    //        .catch(function(error) {
-    //        console.log("Error getting documents: ", error);
-    //    });
+        let orderData = {};
+        firebase.firestore().collection("orders").doc(this.state.orderDetailProps.documentId)
+           .get()
+           .then(function(doc) {
+                  // doc.data() is never undefined for query doc snapshots
+                  orderData= {
+                      'deliveryFee':doc.data().deliveryFee,
+                      'driverId':doc.data().driverId,
+                      'driverName':doc.data().driverName,
+                      'menuName':doc.data().menuName,
+                      'shopAddress':doc.data().shopAddress,
+                      'shopName':doc.data().menuName,
+                      'status':doc.data().status,
+                      'totalPrice':doc.data().totalPrice,
+                      'userAddress':doc.data().userAddress,
+                      'userId':doc.data().userId,
+                      'userName':doc.data().userName,
+                }
+               })
+           .catch(function(error) {
+           console.log("Error getting documents: ", error);
+       });
     
-    //    setTimeout(() => {
-    //       this.setState({animating:false}); 
-    //       this.setState({list:orderData});
-    //    }, 2000)
+       setTimeout(() => {
+        this.setState({orderDetail:orderData});
+          this.setState({animating:false}); 
+       }, 2000)
       };
 
+    setDriverData(){
+        firebase.firestore().collection("orders").doc(this.state.orderDetailProps.documentId).update({
+            driverId: "ZE4C1rh8qEUKrsCIz5wz", status: _STATUS_START, driverName: "運び屋君Ａ",
+            });
+
+        this.setState({animating:true});
+        
+        setTimeout(() => {
+        this.props.navigation.navigate('OrderManagement',{orderDetail:{orderDetail:this.state.orderDetail,
+            ordersDocumentId:this.state.orderDetailProps.documentId}});
+        this.setState({animating:false}); 
+     }, 2000);
+
+    }
+
   render(){
-  return (
+    const animating = this.state.animating;
+    const orderDetail = this.state.orderDetail;
+    return (
 
 <View style={styles.container}>
 
@@ -68,25 +84,52 @@ export default class OrderDetailScreen extends React.Component {
 <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-        
             <View>
-                <Text h2>総額：{orderDetail.payment}</Text>
+            <ListItem
+                // leftAvatar={{ source: { uri: l.avatar_url } }}
+                title="店舗情報"
+            />
             </View>
             <View>
-                <Text h2>枚数：{orderDetail.sheet}</Text>
+                <Text h2>店舗名：{orderDetail.shopName}</Text>
             </View>
             <View>
-                <Text h2>名前：{orderDetail.username}</Text>
+                <Text h2>店舗住所：{orderDetail.shopAddress}</Text>
             </View>
             <View>
-                <Text h2>住所：{orderDetail.address}</Text>
+                <Text h2>メニュー名：{orderDetail.menuName}</Text>
             </View>
+            <View>
+                <Text h2>配送料：{orderDetail.deliveryFee}</Text>
+            </View>
+            <View>
+                <Text h2>総額：{orderDetail.totalPrice}</Text>
+            </View>
+            <View>
+            <ListItem
+                // leftAvatar={{ source: { uri: l.avatar_url } }}
+                title="お届け先情報"
+            />
+            </View>
+            <View>
+                <Text h2>お名前：{orderDetail.userName}</Text>
+            </View>
+            <View>
+                <Text h2>ご住所：{orderDetail.userAddress}</Text>
+            </View>
+            <View>
+        <ActivityIndicator
+           animating = {animating}
+           color = '#0000aa'
+           size = "large"
+           style = {styles.activityIndicator}/>
+        </View>
     </ScrollView>
-    <Button
+    <Button 
         title="受ける"
         type="solid"
         color="blue"
-        onPress={() => {this.props.navigation.navigate('OrderManagement')}}
+        onPress={() => {this.setDriverData()}}
     />
 </View>
   );
