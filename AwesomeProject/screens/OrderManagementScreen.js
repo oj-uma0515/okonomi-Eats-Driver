@@ -136,7 +136,7 @@ export default class OrderManagementScreen extends React.Component {
           style={{ backgroundColor: 'transparent' }}
           right={orderSwipe}
         >
-          <List.Item extra="extra content">
+          <List.Item key="order_start" extra="extra content">
             注文した
           </List.Item>
         </SwipeAction>
@@ -145,7 +145,7 @@ export default class OrderManagementScreen extends React.Component {
           style={{ backgroundColor: 'transparent' }}
           right={receiveSwipe}
         >
-          <List.Item extra="extra content">
+          <List.Item key="order_receive" extra="extra content">
             受け取った
           </List.Item>
         </SwipeAction>
@@ -154,7 +154,7 @@ export default class OrderManagementScreen extends React.Component {
           style={{ backgroundColor: 'transparent' }}
           right={arrivalSwipe}
         >
-          <List.Item extra="extra content">
+          <List.Item key="order_arrival" extra="extra content">
             到着した
           </List.Item>
         </SwipeAction>
@@ -163,7 +163,7 @@ export default class OrderManagementScreen extends React.Component {
           style={{ backgroundColor: 'transparent' }}
           right={passSwipe}
         >
-          <List.Item extra="extra content">
+          <List.Item key="order_done" extra="extra content">
             渡した
           </List.Item>
         </SwipeAction>
