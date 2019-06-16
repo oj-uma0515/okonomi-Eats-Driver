@@ -14,8 +14,7 @@ import { MonoText } from '../components/StyledText';
 import { ListItem,FlatList} from 'react-native-elements';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import { Notifications } from 'expo';
-import { Permissions } from 'expo-permissions';
+import { Permissions,Notifications } from 'expo';
 
 
 export default class HomeScreen extends React.Component {
